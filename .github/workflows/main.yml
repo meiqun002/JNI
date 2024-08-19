@@ -1,4 +1,4 @@
-name: Build JNIDemo on ARM64
+name: Build and Test JNIDemo on ARM64
 
 on:
   push:
@@ -16,43 +16,25 @@ jobs:
     - name: Checkout source
       uses: actions/checkout@v3
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
-      with:
-        platforms: arm64
-
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Install dependencies
+    - name: Build and Test in ARM64 Docker Container
       run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake gcc-aarch64-linux-gnu g++-aarch64-linux-gnu openjdk-17-jdk qemu-user
-
-    # - name: Configure and Build with CMake
-    #   run: |
-    #     mkdir -p build
-    #     cd build
-    #     cmake -DCMAKE_SYSTEM_NAME=Linux \
-    #           -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
-    #           -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
-    #           -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ \
-    #           -DJAVA_AWT_LIBRARY=/usr/lib/jvm/java-17-openjdk-arm64 \
-    #           ..
-    #     make
-    - name: Configure CMake for cross-compilation
-      run: cmake -S . -B build -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++
-
-    - name: Build JNI library
-      run: cmake --build build
-
-    - name: Compile Java code
-      run: javac JNIDemo.java
-
-    - name: Run Java application with QEMU
-      run: |
-        export QEMU_LD_PREFIX=/usr/aarch64-linux-gnu
-        qemu-aarch64 -L /usr/aarch64-linux-gnu java -Djava.library.path=build JNIDemo
+        # 使用 ARM64 Docker 容器进行构建和测试
+        docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace arm64v8/ubuntu:22.04 bash -c "
+          apt-get update && \
+          apt-get install -y cmake gcc g++ openjdk-17-jdk && \
+          mkdir -p build && cd build && \
+          cmake -DCMAKE_SYSTEM_NAME=Linux \
+                -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+                -DCMAKE_C_COMPILER=gcc \
+                -DCMAKE_CXX_COMPILER=g++ \
+                .. && \
+          make && \
+          javac JNIDemo.java && \
+          java -Djava.library.path=build JNIDemo
+        "
 
     - name: Verify Output
       run: |
