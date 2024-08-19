@@ -7,6 +7,7 @@ public class JNIDemo {
     public static native int add(int a, int b);
 
     static {
-        System.load("/root/JNI/build/libJNIDemo.so");
+        // System.load("/root/JNI/build/libJNIDemo.so");
+        System.load(System.getProperty("user.dir") + "/build/libJNIDemo.so"); // 使用相对路径加载库
     }
 }
