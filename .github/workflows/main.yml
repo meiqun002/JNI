@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+        sudo apt-get install -y cmake gcc-aarch64-linux-gnu g++-aarch64-linux-gnu openjdk-17-jdk
 
     - name: Configure and Build with CMake
       run: |
@@ -37,6 +37,7 @@ jobs:
               -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
               -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
               -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ \
+              -DJAVA_AWT_LIBRARY=/usr/lib/jvm/java-17-openjdk-arm64 \
               ..
         make
 
