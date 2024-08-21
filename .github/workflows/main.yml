@@ -10,32 +10,30 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04  # 使用 Ubuntu 22.04 作为基础镜像
+    runs-on: ubuntu-22.04  # 使用 Ubuntu 22.04 作为基础运行环境
 
     steps:
     - name: Checkout source
       uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Build and Test in ARM64 Docker Container
+    - name: Install ARM64 cross-compiler
       run: |
-        # 使用 ARM64 Docker 容器进行构建和测试
-        docker run --platform linux/arm64 --rm -v ${{ github.workspace }}:/workspace -w /workspace arm64v8/ubuntu:22.04 bash -c "
-          apt-get update && \
-          apt-get install -y cmake gcc g++ openjdk-17-jdk && \
-          mkdir -p build && cd build && \
-          cmake -DCMAKE_SYSTEM_NAME=Linux \
-                -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
-                -DCMAKE_C_COMPILER=gcc \
-                -DCMAKE_CXX_COMPILER=g++ \
-                .. && \
-          make && \
-          javac JNIDemo.java && \
-          java -Djava.library.path=build JNIDemo
-        "
+        sudo apt-get update
+        sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu openjdk-17-jdk-headless
 
-    - name: Verify Output
+    - name: Build JNI project for ARM64
       run: |
-        ls -la build
+        mkdir -p build && cd build
+        cmake .. -DCMAKE_SYSTEM_NAME=Linux \
+                 -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+                 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
+                 -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ \
+                 -DJAVA_AWT_INCLUDE_PATH=/usr/lib/jvm/java-17-openjdk-arm64/include \
+                 -DJAVA_AWT_LIBRARY=/usr/lib/jvm/java-17-openjdk-arm64/lib \
+                 -DJAVA_JVM_LIBRARY=/usr/lib/jvm/java-17-openjdk-arm64/lib/server \
+                 -DJAVA_INCLUDE_PATH=/usr/lib/jvm/java-17-openjdk-arm64/include \
+                 -DJAVA_INCLUDE_PATH2=/usr/lib/jvm/java-17-openjdk-arm64/include/linux
+        make
+
+    - name: Verify Build Output
+      run: ls -la build
