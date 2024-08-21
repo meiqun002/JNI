@@ -19,12 +19,12 @@ jobs:
     - name: Install ARM64 cross-compiler
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu openjdk-17-jdk-arm64
+        sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu openjdk-17-jdk
 
     - name: Verify JDK installation
       run: |
-        ls -la /usr/lib/jvm/java-17-openjdk-arm64/include
-        ls -la /usr/lib/jvm/java-17-openjdk-arm64/include/linux
+        ls -la /usr/lib/jvm/java-17-openjdk/include
+        ls -la /usr/lib/jvm/java-17-openjdk/include/linux
       
 
     - name: Build JNI project for ARM64
