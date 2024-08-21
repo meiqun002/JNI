@@ -23,8 +23,10 @@ elseif (UNIX)
     # set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
     # 设置 JNI 头文件路径
-    include_directories("/usr/lib/jvm/java-17-openjdk-arm64/include")
-    include_directories("/usr/lib/jvm/java-17-openjdk-arm64/include/linux")
+    # include_directories("/usr/lib/jvm/java-17-openjdk-arm64/include")
+    # include_directories("/usr/lib/jvm/java-17-openjdk-arm64/include/linux")
+    include_directories("/usr/lib/jvm/temurin-11-jdk-amd64/include")
+    include_directories("/usr/lib/jvm/temurin-11-jdk-amd64/include/linux")
 endif()
 
 # add_executable(main JNIDemo.cpp)

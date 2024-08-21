@@ -30,8 +30,8 @@ jobs:
 
     - name: Verify JDK installation
       run: |
-        ls -la /usr/lib/jvm/java-17-openjdk-arm64/include
-        ls -la /usr/lib/jvm/java-17-openjdk-arm64/include/linux
+        ls -la /usr/lib/jvm/temurin-11-jdk-amd64/include
+        ls -la /usr/lib/jvm/temurin-11-jdk-amd64/include/linux
       
 
     - name: Build JNI project for ARM64
@@ -41,11 +41,11 @@ jobs:
                  -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
                  -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
                  -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ \
-                 -DJAVA_AWT_INCLUDE_PATH=/usr/lib/jvm/java-17-openjdk-arm64/include \
-                 -DJAVA_AWT_LIBRARY=/usr/lib/jvm/java-17-openjdk-arm64/lib \
-                 -DJAVA_JVM_LIBRARY=/usr/lib/jvm/java-17-openjdk-arm64/lib/server \
-                 -DJAVA_INCLUDE_PATH=/usr/lib/jvm/java-17-openjdk-arm64/include \
-                 -DJAVA_INCLUDE_PATH2=/usr/lib/jvm/java-17-openjdk-arm64/include/linux
+                 -DJAVA_AWT_INCLUDE_PATH=/usr/lib/jvm/temurin-11-jdk-amd64/include \
+                 -DJAVA_AWT_LIBRARY=/usr/lib/jvm/temurin-11-jdk-amd64/lib \
+                 -DJAVA_JVM_LIBRARY=/usr/lib/jvm/temurin-11-jdk-amd64/lib/server \
+                 -DJAVA_INCLUDE_PATH=/usr/lib/jvm/temurin-11-jdk-amd64/include \
+                 -DJAVA_INCLUDE_PATH2=/usr/lib/jvm/temurin-11-jdk-amd64/include/linux
         make
 
     - name: Verify Build Output
