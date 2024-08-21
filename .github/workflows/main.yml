@@ -22,7 +22,7 @@ jobs:
     - name: Build and Test in ARM64 Docker Container
       run: |
         # 使用 ARM64 Docker 容器进行构建和测试
-        docker run --platform=linux/arm64 --rm -v ${{ github.workspace }}:/workspace -w /workspace arm64v8/ubuntu:22.04 bash -c "
+        docker run --platform linux/arm64 --rm -v ${{ github.workspace }}:/workspace -w /workspace arm64v8/ubuntu:22.04 bash -c "
           apt-get update && \
           apt-get install -y cmake gcc g++ openjdk-17-jdk && \
           mkdir -p build && cd build && \
